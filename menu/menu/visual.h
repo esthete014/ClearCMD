@@ -130,12 +130,12 @@ public:
 				while (true) { 
 					if ( GetAsyncKeyState(VK_SHIFT)) {
 						focusid--; focusid < 0 ? focusid = container.size() - 1 : 0;
-						paint(focusid); 
+						paintFocus(focusid, false); 
 						Sleep(300); 
 					}
 					else if (GetAsyncKeyState(VK_TAB)) { 
 						focusid++; focusid > container.size() -1 ? focusid = 0 : 0; 
-						paint(focusid); Sleep(300); 
+						paintFocus(focusid, true); Sleep(300); 
 					}
 				}
 			}
@@ -172,13 +172,13 @@ public:
 		openlink.detach();*/
 
 	}
-	void realeseCMDLITE() {
+	/*void realeseCMDLITE() {
 		try {
 			build();
 		}
 		catch (...) {
 		}
-	}
+	}*/
 private:
 	/*void switchfocus(int id) {
 		while (true) { if (GetAsyncKeyState(VK_TAB)) { id++; paint(id); } }
@@ -189,6 +189,14 @@ private:
 	}
 	void markup() {
 
+	}
+	void paintFocus(int focusid, bool forwardswitch) {
+		printBlock(true, container[focusid].start_x, container[focusid].start_y, container[focusid].end_x, container[focusid].end_y);
+		int previous = 1;
+		if (!forwardswitch) {
+			previous = -1;
+		}
+		printBlock(false, container[focusid - previous].start_x, container[focusid - previous].start_y, container[focusid - previous].end_x, container[focusid - previous].end_y);
 	}
 	void paint(int focusid) {
 		for (int i = 0; i < container.size(); i++) {
