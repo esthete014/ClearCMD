@@ -129,18 +129,23 @@ public:
 			{
 				while (true) { 
 					if ( GetAsyncKeyState(VK_SHIFT)) {
+						int previous = focusid;
 						focusid--; focusid < 0 ? focusid = container.size() - 1 : 0;
-						paintFocus(focusid, false); 
+						paintFocus(focusid, previous);
 						Sleep(300); 
 					}
-					else if (GetAsyncKeyState(VK_TAB)) { 
+					else if (GetAsyncKeyState(VK_TAB)) {
+						int previous = focusid;
 						focusid++; focusid > container.size() -1 ? focusid = 0 : 0; 
-						paintFocus(focusid, true); Sleep(300); 
+						paintFocus(focusid, previous); Sleep(300);
 					}
 				}
 			}
 		);
 		switchfocusthr.detach();
+
+
+
 		while (1);
 		//bool A = false;
 		//printBlock(A, 0, 0, 0, 0);
@@ -190,17 +195,14 @@ private:
 	void markup() {
 
 	}
-	void paintFocus(int focusid, bool forwardswitch) {
+	void paintFocus(int focusid, int previous) {
 		printBlock(true, container[focusid].start_x, container[focusid].start_y, container[focusid].end_x, container[focusid].end_y);
-		int previous = 1;
-		if (!forwardswitch) {
-			previous = -1;
-		}
-		printBlock(false, container[focusid - previous].start_x, container[focusid - previous].start_y, container[focusid - previous].end_x, container[focusid - previous].end_y);
+		printBlock(false, container[previous].start_x, container[previous].start_y, container[previous].end_x, container[previous].end_y);
 	}
 	void paint(int focusid) {
 		for (int i = 0; i < container.size(); i++) {
 			printBlock(i == focusid ? true : false, container[i].start_x, container[i].start_y, container[i].end_x, container[i].end_y);
+			container[i].printContent(hStdOut);
 		}
 
 		//std::vector<int> temp;
@@ -226,8 +228,9 @@ private:
 		int xlength = xend - xstart;
 		int ylength = yend - ystart;
 		std::string line = "————————————";
-		std::string ch = "│";
-		if (focus) { line = "════════════"; ch = "║"; };
+		std::string ch1 = "│";
+		std::string ch2 = "○";
+		if (focus) { line = "════════════"; ch1 = "║"; ch2 = "■"; };
 		for (int i = 0; i <= xlength; i++) {
 			printByPos(line, (xstart + i) * 12, ystart * 3);
 			printByPos(line, (xstart + i) * 12, yend * 3 + 2);
@@ -236,17 +239,15 @@ private:
 			for (int i = 0; i < 3; i++) {
 				if (!((j == 0 && i == 0) || (j == ylength && i == 2))) {
 
-					printByPos(ch, xstart * 12, (ystart + j) * 3 + i);
-					printByPos(ch, (xend) * 12 + 11, (ystart + j) * 3 + i);
+					printByPos(ch1, xstart * 12, (ystart + j) * 3 + i);
+					printByPos(ch1, (xend) * 12 + 11, (ystart + j) * 3 + i);
 				}
 			}
 		}
-		ch = "○";
-		if (focus) { ch = "■"; }
-		printByPos(ch, xstart * 12, ystart * 3);
-		printByPos(ch, xend * 12 + 11, ystart * 3);
-		printByPos(ch, xstart * 12, yend * 3 + 2);
-		printByPos(ch, xend * 12 + 11, yend * 3 + 2);
+		printByPos(ch2, xstart * 12, ystart * 3);
+		printByPos(ch2, xend * 12 + 11, ystart * 3);
+		printByPos(ch2, xstart * 12, yend * 3 + 2);
+		printByPos(ch2, xend * 12 + 11, yend * 3 + 2);
 	}
 	//void printBlockAngles(bool focus, int xstart, int ystart, int xend, int yend) {
 	//}

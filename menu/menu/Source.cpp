@@ -12,7 +12,7 @@
 
 class MyClass {
 public:
-	std::string str1 = "4rd";
+	std::string str1 = "4rdkwfjlkeokljfkwjkfj";
 
 	void* func1(void*) {
 		std::cout << "i am btn1" + str1;
@@ -96,7 +96,8 @@ int main() {
 	SetConsoleTitle(L"Clear CMD Client");
 	SetWindowPos(consoleWindow, 0, 315, 170, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
 	
-	MyClass myobj;
+	MyClass myobj1;
+	MyClass myobj2;
 	/*for (int i = 0; i < 3751; i++) {
 		std::cout << i % 10;
 	}*/
@@ -128,12 +129,13 @@ int main() {
 	
 	Visual (
 		{
-			Block(new STR("234"), 0, 0, 0, 0), 
-			Block(new STR(&myobj.str1, &str2), 1, 0, 1, 0), 
-			Block(new BTN("btn2", func2), 2, 0, 2, 0),
-			Block(new STR("dfgge"), 0, 1, 0, 1), 
-			Block(new STR(&str2, &myobj.str1), 1, 1, 1, 1), 
-			Block(new BTN("btn2 #2", func2), 2, 1, 2, 3)
+			//Block(new STR("234"), 0, 0, 0, 0), 
+			//Block(new STR(&myobj1.str1), 1, 0, 1, 0),
+			//Block(new BTN("btn2", func2), 2, 0, 2, 0),
+			//Block(new STR("dfgge"), 0, 1, 0, 1), 
+			//Block(new STR(&str2), 1, 1, 1, 1), 
+			//Block(new BTN("btn2 #2", func2), 2, 1, 2, 3),
+			Block(new STR("12345678901234567890123456789012345678902935892835310985959830982585983509385029750928358979831579817395175931075wererwrwerwerwrewrw1234567"), 3, 2, 5, 3),
 		},
 		std::unordered_map<std::string, myfunc>{ {"btn2", func2 } }
 	);

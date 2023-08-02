@@ -29,12 +29,12 @@ using myfunc = void* (*)(void*);
 //};
 
 class STR {
-	std::string Name = "";
+	//std::string Name = "";
 	std::string Strline = "";
 	STR();
 public:
-	bool nameexist = false;
-	std::string* name;
+	//bool nameexist = false;
+	//std::string* name;
 	std::string* strline;
 	STR(std::string _strline) {
 		Strline = _strline;
@@ -43,7 +43,7 @@ public:
 	STR(std::string* _strline) {
 		strline = _strline;
 	}
-	STR(std::string _name, std::string _strline) {
+	/*STR(std::string _name, std::string _strline) {
 		Name = _name;
 		name = &Name;
 		Strline = _strline;
@@ -54,7 +54,7 @@ public:
 		name = _name;
 		strline = _strline;
 		nameexist = true;
-	}
+	}*/
 	/*void print() {
 		std::cout << *strline << "\n";
 	}*/
@@ -180,6 +180,13 @@ class Block {
 		// TABLE !!!!!!!! одна ячейка 
 		if (end_x - start_x < minx || end_y - start_y < miny) { std::_Throw_range_error("end coords cant be less then start!"); }
 	}
+	void printByPos(std::string str, int _x, int _y, HANDLE hStdOut) {
+		COORD cor;
+		cor.X = _x;
+		cor.Y = _y;
+		SetConsoleCursorPosition(hStdOut, cor);
+		std::cout << str;
+	}
 public:
 	int start_x;
 	int start_y;
@@ -233,6 +240,51 @@ public:
 		type = TYPE::TLIST;
 		data = (void*)ls;
 		checkCoords();
+	}
+	void printContent(HANDLE hStdOut) {
+		int xlength = 12 * (end_x-start_x + 1) - 2;/*((end_x - start_x + 1) * 10) + ((end_x - start_x < 0 ? 0 : end_x - start_x) * 2)*//*(12 * ((end_x + 1) - (start_x + 1))) - 2;*/
+		int ylength = 3 * (end_y - start_y + 1) - 2; //(end_y - start_y + 1) + ((end_y - start_y < 0 ? 0 : end_y - start_y) * 2);
+		std::vector<std::string> linesvec;
+		if (type == TYPE::TSTR) {
+			bool endline = false;
+			std::string& linestr = *static_cast<STR*>(data)->strline;
+			for (int i = 0; i < ylength; i++) {
+				if (linestr.size() > xlength * i && linestr.size() < xlength * (i + 1)) {
+					linesvec.push_back(linestr.substr(xlength * i, linestr.size() % xlength) + std::string(xlength - (linestr.size() % xlength), ' '));
+					endline = true;
+				}
+				else if (endline) {
+					linesvec.push_back(std::string(xlength, ' '));
+				}
+				else {
+					if (i == ylength - 1) {
+						linesvec.push_back(linestr.substr(xlength * i, xlength - 3) + "...");
+					}
+					else { linesvec.push_back(linestr.substr(xlength * i, xlength)); }
+				}
+				/*if (!endline) {
+					linesvec[ylength - 1][xlength - 3] = '.';
+					linesvec[ylength - 1][xlength - 2] = '.';
+					linesvec[ylength - 1][xlength - 1] = '.';
+				}*/
+			}
+			for (int i = 0; i < linesvec.size(); i++) {
+				printByPos(linesvec[i], (start_x * 12) + 1, (start_y  * 3) + 1 + i, hStdOut);
+			}
+			/*int linecount = (*static_cast<STR*>(data)->strline).size() / xlength;
+			if ((*static_cast<STR*>(data)->strline).size() % xlength > 0) { linecount++; }
+			if (linecount > ylength) { linecount = ylength; }
+			for (int i = 0; i < linecount; i++) {
+				if ((*static_cast<STR*>(data)->strline).size() - (xlength * i) > xlength) { 
+					linesvec.push_back((*static_cast<STR*>(data)->strline).substr(i * xlength, (*static_cast<STR*>(data)->strline).size() - (xlength * i)));
+				}
+				else { linesvec.push_back((*static_cast<STR*>(data)->strline).substr(i * xlength, xlength)); }
+			}*/
+		}
+		if (type == TYPE::TBTN) {
+			int halfylength = ylength / 2;
+			int halfxlength = (ylength - (*static_cast<BTN*>(data)->name).size()) / 2;
+		}
 	}
 };
 
